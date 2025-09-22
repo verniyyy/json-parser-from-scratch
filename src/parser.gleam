@@ -30,6 +30,24 @@ fn satisfy(predicate: fn(String) -> Bool) -> Parser(String, String) {
   |> Parser
 }
 
+fn string1(s: String) -> Parser(String, String) {
+  fn(input: String) -> option.Option(#(String, String)) {
+    case string.to_graphemes(input) {
+      [] -> option.None
+      [c, ..cs] ->
+        case char(c).run_parser(input) {
+          option.None -> option.None
+          option.Some(#(rest, _)) ->
+            case string1(string.concat(cs)).run_parser(rest) {
+              option.Some(#(rest, _)) -> option.Some(#(rest, s))
+              option.None -> option.None
+            }
+        }
+    }
+  }
+  |> Parser
+}
+
 fn char(s: String) -> Parser(String, String) {
   util.eq(_, s)
   |> satisfy
