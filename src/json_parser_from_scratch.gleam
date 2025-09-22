@@ -21,7 +21,7 @@ pub type Parser(i, o) {
 }
 
 fn satisfy(predicate: fn(String) -> Bool) -> Parser(String, String) {
-  Parser(fn(input: String) -> option.Option(#(String, String)) {
+  fn(input: String) -> option.Option(#(String, String)) {
     case string.to_graphemes(input) {
       [x, ..xs] ->
         case predicate(x) {
@@ -30,7 +30,8 @@ fn satisfy(predicate: fn(String) -> Bool) -> Parser(String, String) {
         }
       _ -> option.None
     }
-  })
+  }
+  |> Parser
 }
 
 fn char1(s: String) -> Parser(String, String) {
