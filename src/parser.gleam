@@ -9,7 +9,8 @@ pub type Parser(i, o) {
 
 pub fn map(p: Parser(_, a), f: fn(a) -> b) -> Parser(_, b) {
   fn(input: i) -> option.Option(#(i, b)) {
-    p.run_parser(input)
+    input
+    |> p.run_parser
     |> option.map(tuple.map(_, f))
   }
   |> Parser
@@ -30,10 +31,12 @@ fn satisfy(predicate: fn(String) -> Bool) -> Parser(String, String) {
 }
 
 fn char(s: String) -> Parser(String, String) {
-  satisfy(util.eq(_, s))
+  util.eq(_, s)
+  |> satisfy
 }
 
 fn digit() -> Parser(String, Int) {
-  satisfy(util.is_digit)
+  util.is_digit
+  |> satisfy
   |> map(util.digit_to_int)
 }
