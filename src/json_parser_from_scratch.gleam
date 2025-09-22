@@ -40,3 +40,19 @@ fn char1(s: String) -> Parser(String, String) {
 fn eq(a: a, b: a) -> Bool {
   a == b
 }
+
+fn digit1() -> Parser(String, Int) {
+  fn(i) -> option.Option(#(String, Int)) {
+    use #(rest, d) <- option.then(satisfy(is_digit).run_parser(i))
+    case int.parse(d) {
+      Ok(n) -> option.Some(#(rest, n))
+      Error(_) -> option.None
+    }
+  }
+  |> Parser
+}
+
+fn is_digit(c: String) -> Bool {
+  "1234567890"
+  |> string.contains(c)
+}
